@@ -4,6 +4,7 @@ import NavBar from "./NavBar";
 import { createTask } from "../api/taskService";
 import sharpNoBg from '../assets/Sharp_no_bg.png'
 import dropfig from '../assets/dropfig.png'
+import BeatLoader from "react-spinners/BeatLoader";
 
 type Tag = "Urgent" | "Important" | "Completed";
 
@@ -37,6 +38,8 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
     const [descriptionError, setDescriptionError] = useState("");
     const [dueDateError, setDueDateError] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [navigating, setNavigating] = useState(false);
 
     const navigate = useNavigate()
 
@@ -71,6 +74,7 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
     if (isValid) {
       try {
+        setSaving(true);
         const resolvedCategory: "Urgent" | "Important" | "Completed" = tags.includes("Urgent") 
           ? "Urgent" 
           : tags.includes("Completed") 
@@ -86,9 +90,11 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
         });
 
         onSave?.({ title: title.trim(), description: description.trim(), tags });
+        setSaving(false);
         setShowModal(true);
       } catch (error) {
         console.error(error);
+        setSaving(false);
         setTitleError("Failed to save task to the server. Please try again.");
       }
     }
@@ -96,12 +102,28 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    navigate('/my-tasks');
+    setNavigating(true);
+    setTimeout(() => {
+      navigate('/my-tasks');
+      setNavigating(false);
+    }, 800);
   };
 
   return (
     <div>
       <NavBar/>
+
+      {saving && (
+        <div className="fixed inset-0 bg-white/70 flex items-center justify-center z-100">
+          <BeatLoader color="#7c3aed" />
+        </div>
+      )}
+
+      {navigating && (
+        <div className="fixed inset-0 bg-white/70 flex items-center justify-center z-100">
+          <BeatLoader color="#7c3aed" />
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
@@ -123,7 +145,6 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
       <div className="flex flex-col lg:flex-row max-w-7xl mx-auto items-center lg:items-start px-4 sm:px-6 md:px-12 lg:px-0 gap-6 lg:gap-0">
 
-        {/* Image — hidden on mobile, visible on desktop */}
         <div className="hidden w-4/12 justify-center lg:block">
           <img className="w-full h-auto lg:max-w-none pt-25" src={sharpNoBg} alt="Pin"/>
         </div>
@@ -139,7 +160,6 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
           <h1 className="md:text-3xl text-2xl font-bold text-violet-500">New Task</h1>
 
-          {/* Task Title */}
           <div className="w-full">
             <div className={`relative border rounded-md bg-white px-3 py-3 mt-2 ${titleError ? 'border-red-500 ring-1 ring-red-500' : 'border-gray-300'}`}>
               <label className={`absolute -top-3.5 left-3 bg-white px-1 text-md ${titleError ? 'text-red-500' : 'text-gray-400'}`}>
@@ -159,7 +179,6 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
             {titleError && <p className="text-red-500 text-xs mt-1 font-medium pl-1">{titleError}</p>}
           </div>
 
-          {/* Description */}
           <div className="w-full">
             <div className={`relative border rounded-md bg-white px-3 py-3 mt-4 ${descriptionError ? 'border-red-500 ring-1 ring-red-500' : 'border-gray-300'}`}>
               <label className={`absolute -top-3.5 left-3 bg-white px-1 text-md ${descriptionError ? 'text-red-500' : 'text-gray-400'}`}>
@@ -179,7 +198,6 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
             {descriptionError && <p className="text-red-500 text-xs mt-1 font-medium pl-1">{descriptionError}</p>}
           </div>
 
-          {/* Due Date */}
           <div className="w-full">
             <div className={`relative border rounded-md bg-white px-3 py-3 mt-2 ${dueDateError ? 'border-red-500 ring-1 ring-red-500' : 'border-gray-300'}`}>
               <label className={`absolute -top-3.5 left-3 bg-white px-1 text-md ${dueDateError ? 'text-red-500' : 'text-gray-400'}`}>
@@ -199,7 +217,6 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
             {dueDateError && <p className="text-red-500 text-xs mt-1 font-medium pl-1">{dueDateError}</p>}
           </div>
 
-          {/* Tags */}
           <div className="relative mt-2">
             <div
               className="relative border border-gray-300 rounded-md bg-white px-3 py-5 cursor-pointer"
@@ -214,9 +231,7 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
                     <span className="text-sm text-gray-300">Select tags…</span>
                   )}
                   {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-200 text-gray-600 whitespace-nowrap">
+                    <span key={tag} className="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-200 text-gray-600 whitespace-nowrap">
                       {tag}
                     </span>
                   ))}
@@ -227,17 +242,10 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
             {tagsOpen && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setTagsOpen(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setTagsOpen(false)} />
                 <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
                   {ALL_TAGS.map((tag) => (
-                    <div
-                      key={tag}
-                      onClick={() => toggleTag(tag)}
-                      className="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
-                    >
+                    <div key={tag} onClick={() => toggleTag(tag)} className="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
                       <span>{tag}</span>
                     </div>
                   ))}
@@ -248,8 +256,9 @@ const NewTask = ({ onSave }: NewTaskPageProps) => {
 
           <button
             onClick={handleDone}
-            className="w-full bg-violet-600 hover:bg-violet-700 active:scale-[0.99] text-white font-semibold text-base py-4 rounded-xl transition-all mt-4">
-            Done
+            disabled={saving}
+            className="w-full bg-violet-600 hover:bg-violet-700 active:scale-[0.99] text-white font-semibold text-base py-4 rounded-xl transition-all mt-4 disabled:opacity-60">
+            {saving ? <BeatLoader color="#ffffff" size={8} /> : "Done"}
           </button>
 
           <button
