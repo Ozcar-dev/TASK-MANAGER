@@ -1,5 +1,6 @@
 import NavBar from './NavBar'
 import { useNavigate } from "react-router-dom";
+import heroImg from '../assets/Hero img.png'
 
 const HomePage = () => {
 
@@ -28,14 +29,11 @@ const HomePage = () => {
         </div>
 
           <div className="flex items-center justify-center w-full sm:w-8/12 md:w-5/12 mb-6 md:mb-0">
-            <img className="w-full h-auto" src="/src/assets/Hero img.png" alt="Hero Img"/>
+            <img className="w-full h-auto" src={heroImg} alt="Hero Img"/>
         </div>
     </section>
   </div>
 </div>
-
-
-
   )
 }
 

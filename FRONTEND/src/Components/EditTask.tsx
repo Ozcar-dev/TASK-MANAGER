@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchTask, updateTask } from "../api/taskService";
 import NavBar from "./NavBar";
+import sharpNoBg from '../assets/Sharp_no_bg.png'
+import dropfig from '../assets/dropfig.png'
 
 type Tag = "Urgent" | "Important";
 
@@ -118,7 +120,7 @@ const EditTask = () => {
       <div className="flex flex-col lg:flex-row max-w-7xl mx-auto items-center lg:items-start px-4 sm:px-6 md:px-12 lg:px-0 gap-6 lg:gap-0">
 
         <div className="hidden lg:block w-4/12">
-          <img className="w-full h-auto pt-25" src="/src/assets/Sharp_no_bg.png" alt="Pin" />
+          <img className="w-full h-auto pt-25" src={sharpNoBg} alt="Pin" />
         </div>
 
         <div className="flex flex-col gap-3 w-full lg:w-8/12 px-2 sm:px-4 md:px-6 lg:px-15 py-4 lg:py-20 mt-16 md:mt-20 lg:mt-0">
@@ -191,7 +193,7 @@ const EditTask = () => {
                     </span>
                   ))}
                 </div>
-                <img className="w-4 h-4 rounded-full object-cover shrink-0" src="/src/assets/dropfig.png" alt="Drop down" />
+                <img className="w-4 h-4 rounded-full object-cover shrink-0" src={dropfig} alt="Drop down" />
               </div>
             </div>
 
