@@ -1,4 +1,4 @@
-import { Schema, model, Document, ValidatorProps } from "mongoose";
+import { Schema, model, Document, ValidatorProps, Types } from "mongoose";
 
 export interface ITask extends Document {
   title: string;
@@ -6,6 +6,7 @@ export interface ITask extends Document {
   dueDate: Date;
   category: "Urgent" | "Important" | "Completed";
   completed: boolean;
+  createdBy: Types.ObjectId;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -22,29 +23,34 @@ const taskSchema = new Schema<ITask>(
       trim: true,
     },
     dueDate: {
-  type: Date,
-  required: [true, "Due date is required"],
-  validate: {
-    validator: (value: Date): boolean => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return value >= today;
+      type: Date,
+      required: [true, "Due date is required"],
+      validate: {
+        validator: (value: Date): boolean => {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          return value >= today;
+        },
+        message: (props: ValidatorProps): string =>
+          `${props.value} is in the past. Due date must be today or later.`,
+      },
     },
-    message: (props: ValidatorProps): string =>
-      `Due date must be at least one week from today. You provided ${props.value}.`,
-  },
-},
     category: {
       type: String,
       required: [true, "Category is required"],
       enum: {
-      values: ["Urgent", "Important", "Completed"],
-      message: "Category must be Urgent, Important or Completed",
+        values: ["Urgent", "Important", "Completed"],
+        message: "Category must be Urgent, Important or Completed",
+      },
     },
-},
     completed: {
       type: Boolean,
       default: false,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User is required"],
     },
   },
   { timestamps: true }

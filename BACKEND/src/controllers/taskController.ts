@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import Task from "../models/task";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 // GET ALL TASKS
 export const getAllTasks = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const tasks = await Task.find().sort({ createdAt: -1 });
+    const tasks = await Task.find({ createdBy: req.user?._id }).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -21,11 +22,11 @@ export const getAllTasks = async (
 
 // GET SINGLE TASK
 export const getTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ _id: req.params.id, createdBy: req.user?._id });
 
     if (!task) {
       res.status(404).json({ success: false, message: "Task not found" });
@@ -40,13 +41,13 @@ export const getTask = async (
 
 // CREATE TASK
 export const createTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { title, description, dueDate, category, completed } = req.body;
 
-    const existingTitle = await Task.findOne({ title });
+    const existingTitle = await Task.findOne({ title, createdBy: req.user?._id });
     if (existingTitle) {
       res.status(400).json({ success: false, message: "Task title already exists" });
       return;
@@ -58,6 +59,7 @@ export const createTask = async (
       dueDate: new Date(dueDate),
       category,
       completed: completed === "true" || completed === true || false,
+      createdBy: req.user?._id,
     });
 
     res.status(201).json({
@@ -73,11 +75,11 @@ export const createTask = async (
 
 // UPDATE TASK
 export const updateTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ _id: req.params.id, createdBy: req.user?._id });
 
     if (!task) {
       res.status(404).json({ success: false, message: "Task not found" });
@@ -121,11 +123,11 @@ export const updateTask = async (
 
 // DELETE TASK
 export const deleteTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({ _id: req.params.id, createdBy: req.user?._id });
 
     if (!task) {
       res.status(404).json({ success: false, message: "Task not found" });

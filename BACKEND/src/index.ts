@@ -6,6 +6,7 @@ import connectDB from "./config/db";
 import cors from "cors"
 import errorHandler from "./middleware/errorHandler";
 import taskRoutes from "./routes/taskRoutes"
+import authRoutes from "./routes/authRoutes"
 
 dotenv.config();
 
@@ -13,6 +14,12 @@ dotenv.config();
 connectDB();
 
 const app = express();
+import { Router } from "express";
+const testRouter = Router();
+testRouter.post("/forgot-password", (req, res) => {
+  res.json({ success: true, message: "INLINE TEST WORKS" });
+});
+app.use("/auth-test", testRouter);
 
 
 // MIDDLEWARE
@@ -39,7 +46,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 // ROUTES
-
+app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
 
 // 404 handler
