@@ -8,8 +8,6 @@ const MyTasks = () => {
   const [tasks, setTasks] = useState<ITask[]>([])
   const [loading, setLoading] = useState(false)
   const [activeFilter, setActiveFilter] = useState<"All" | "Urgent" | "Important" | "Completed">("All")
-  
-  // Modal feedback state
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
@@ -73,8 +71,8 @@ const MyTasks = () => {
                 <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
                   ✓
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Deleted</h3>
-                <p className="text-gray-500 text-sm mb-6">Your task has been deleted successfully.</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Moved to Trash</h3>
+                <p className="text-gray-500 text-sm mb-6">Your task has been moved to trash. You can restore it anytime.</p>
                 <button
                   onClick={() => setShowDeleteModal(false)}
                   className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-all"

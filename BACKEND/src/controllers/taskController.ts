@@ -121,13 +121,40 @@ export const updateTask = async (
   }
 };
 
-// DELETE TASK
+// // DELETE TASK
+// export const deleteTask = async (
+//   req: AuthRequest,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const task = await Task.findOneAndDelete({ _id: req.params.id, createdBy: req.user?._id });
+
+//     if (!task) {
+//       res.status(404).json({ success: false, message: "Task not found" });
+//       return;
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Task deleted successfully",
+//     });
+//   } catch (error) {
+//     console.error("Delete task error:", error);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// };
+
+// SOFT DELETE TASK (move to trash)
 export const deleteTask = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const task = await Task.findOneAndDelete({ _id: req.params.id, createdBy: req.user?._id });
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, createdBy: req.user?._id, isDeleted: false },
+      { $set: { isDeleted: true, deletedAt: new Date() } },
+      { new: true }
+    );
 
     if (!task) {
       res.status(404).json({ success: false, message: "Task not found" });
@@ -137,9 +164,83 @@ export const deleteTask = async (
     res.status(200).json({
       success: true,
       message: "Task deleted successfully",
+      task,
     });
   } catch (error) {
     console.error("Delete task error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// GET TRASHED TASKS
+export const getTrashedTasks = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const tasks = await Task.find({ createdBy: req.user?._id, isDeleted: true }).sort({ deletedAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      tasks,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// RESTORE TASK FROM TRASH
+export const restoreTask = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, createdBy: req.user?._id, isDeleted: true },
+      { $set: { isDeleted: false }, $unset: { deletedAt: "" } },
+      { new: true }
+    );
+
+    if (!task) {
+      res.status(404).json({ success: false, message: "Trashed task not found" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Task restored successfully",
+      task,
+    });
+  } catch (error) {
+    console.error("Restore task error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// PERMANENTLY DELETE TASK
+export const permanentlyDeleteTask = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      createdBy: req.user?._id,
+      isDeleted: true,
+    });
+
+    if (!task) {
+      res.status(404).json({ success: false, message: "Trashed task not found" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Task permanently deleted",
+    });
+  } catch (error) {
+    console.error("Permanent delete error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

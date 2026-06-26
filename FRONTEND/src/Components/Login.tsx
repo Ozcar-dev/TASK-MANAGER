@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../api/authService';
 import { useAuth } from '../context/AuthContext';
 import axios from "axios";
+import userOutlineIcon from '../assets/userOutlineIcon.png';
+import userFillIcon from '../assets/userFillIcon.png';
+import passwordIcon from '../assets/passwordIcon.png';
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (axios.isAxiosError(error)) {
@@ -209,7 +212,7 @@ const handleSignup = async () => {
             <div className='mx-auto container'>
               <div className='hidden md:flex flex-col items-center gap-3 pt-15'>
                 <div className="w-20 h-20 rounded-full bg-purple-300 flex flex-col justify-center items-center shadow-gray-300 shadow-[0px_0px_9px_1px]">
-                  <img className='w-16 h-16' src="/src/assets/cuida--user-outline.png" alt="User"/>
+                  <img className='w-16 h-16' src={userOutlineIcon} alt="User"/>
                 </div>
                 <h1 className='font-bold text-2xl'>LOGIN</h1>
               </div>
@@ -224,7 +227,7 @@ const handleSignup = async () => {
                 <div className='flex flex-col items-center'>
                   <div className='flex items-center justify-center relative w-full'>
                     <div className="absolute lg:left-20 left-10 w-5 h-5 border rounded-full bg-gray-600 flex flex-col justify-center items-center">
-                      <img src="/src/assets/userfill.png" alt="userfill" />
+                      <img src={userFillIcon} alt="userfill" />
                     </div>
                     <input
                       className='md:pl-15 pl-12 font-bold rounded-b-xl border-b-2 border-gray-500 outline-none w-10/12 py-3.5 placeholder:text-md placeholder:font-semibold'
@@ -241,7 +244,7 @@ const handleSignup = async () => {
                 <div className='flex flex-col items-center'>
                   <div className='flex items-center justify-center relative w-full'>
                     <div className="absolute lg:left-20 left-10 w-5 h-5 border rounded-full bg-gray-600 flex flex-col justify-center items-center">
-                      <img src="/src/assets/mdi--password.png" alt="userfill" />
+                      <img src={passwordIcon} alt="userfill" />
                     </div>
                     <input
                       className='md:pl-15 pl-12 font-bold rounded-b-xl border-b-2 border-gray-500 outline-none w-10/12 py-3.5 placeholder:text-md placeholder:font-semibold'
@@ -279,7 +282,7 @@ const handleSignup = async () => {
             <div className="h-full mx-auto container flex flex-col overflow-hidden">
               <div className='hidden md:flex flex-col items-center gap-2 pt-8'>
                 <div className="w-20 h-20 rounded-full bg-purple-300 flex flex-col justify-center items-center shadow-gray-300 shadow-[0px_0px_9px_1px]">
-                  <img className='w-16 h-16' src="/src/assets/cuida--user-outline.png" alt="User"/>
+                  <img className='w-16 h-16' src={userOutlineIcon} alt="User"/>
                 </div>
                 <h1 className='font-bold text-2xl'>SIGN UP</h1>
               </div>
@@ -294,7 +297,7 @@ const handleSignup = async () => {
                 <div className='flex flex-col items-center'>
                   <div className='flex items-center justify-center relative w-full'>
                     <div className="absolute lg:left-20 left-10 w-5 h-5 border rounded-full bg-gray-600 flex flex-col justify-center items-center">
-                      <img src="/src/assets/userfill.png" alt="userfill" />
+                      <img src={userFillIcon} alt="userfill" />
                     </div>
                     <input
                       className='md:pl-15 pl-12 font-bold rounded-b-xl border-b-2 border-gray-500 outline-none w-10/12 py-3.5 placeholder:text-md placeholder:font-semibold'
@@ -311,7 +314,7 @@ const handleSignup = async () => {
                 <div className='flex flex-col items-center'>
                   <div className='flex items-center justify-center relative w-full'>
                     <div className="absolute lg:left-20 left-10 w-5 h-5 border rounded-full bg-gray-600 flex flex-col justify-center items-center">
-                      <img src="/src/assets/userfill.png" alt="userfill" />
+                      <img src={userFillIcon} alt="userfill" />
                     </div>
                     <input
                       className='md:pl-15 pl-12 font-bold rounded-b-xl border-b-2 border-gray-500 outline-none w-10/12 py-3.5 placeholder:text-md placeholder:font-semibold'
@@ -328,7 +331,7 @@ const handleSignup = async () => {
                 <div className='flex flex-col items-center'>
                   <div className='flex items-center justify-center relative w-full'>
                     <div className="absolute lg:left-20 left-10 w-5 h-5 border rounded-full bg-gray-600 flex flex-col justify-center items-center">
-                      <img src="/src/assets/mdi--password.png" alt="userfill" />
+                      <img src={passwordIcon} alt="userfill" />
                     </div>
                     <input
                       className='md:pl-15 pl-12 font-bold rounded-b-xl border-b-2 border-gray-500 outline-none w-10/12 py-3.5 placeholder:text-md placeholder:font-semibold'

@@ -69,6 +69,7 @@ const NavBar = () => {
           )}
 
           <button onClick={() => handleProtectedRoute('/my-tasks')} className="text-gray-700 hover:text-purple-600 font-medium">All Tasks</button>
+          <button onClick={() => handleProtectedRoute('/trash')} className="text-gray-700 hover:text-purple-600 font-medium">Trash</button>
 
           {isAuthenticated && (
             <button onClick={handleLogout} className="text-gray-700 hover:text-red-600 font-medium">Logout</button>
@@ -104,6 +105,7 @@ const NavBar = () => {
             )}
 
             <button onClick={() => { handleProtectedRoute('/my-tasks'); setIsOpen(false); }} className="text-gray-700 hover:text-purple-600 font-medium w-full text-center py-2">All Tasks</button>
+            <button onClick={() => { handleProtectedRoute('/trash'); setIsOpen(false); }} className="text-gray-700 hover:text-purple-600 font-medium w-full text-center py-2">Trash</button>
 
             {isAuthenticated && (
               <button onClick={() => { handleLogout(); setIsOpen(false); }} className="text-red-600 hover:text-red-700 font-medium w-full text-center py-2">Logout</button>

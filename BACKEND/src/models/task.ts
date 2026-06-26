@@ -7,6 +7,8 @@ export interface ITask extends Document {
   category: "Urgent" | "Important" | "Completed";
   completed: boolean;
   createdBy: Types.ObjectId;
+  isDeleted: boolean;
+  deletedAt?: Date;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -51,6 +53,13 @@ const taskSchema = new Schema<ITask>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User is required"],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
     },
   },
   { timestamps: true }

@@ -47,3 +47,17 @@ export const updateTask = async (id: string, payload: Partial<CreateTaskPayload>
 export const deleteTask = async (id: string): Promise<void> => {
   await api.delete(`/tasks/${id}`);
 };
+
+export const fetchTrashedTasks = async (): Promise<ITask[]> => {
+  const response = await api.get("/tasks/trash");
+  return response.data.tasks;
+};
+
+export const restoreTask = async (id: string): Promise<ITask> => {
+  const response = await api.put(`/tasks/trash/${id}/restore`);
+  return response.data.task;
+};
+
+export const permanentlyDeleteTask = async (id: string): Promise<void> => {
+  await api.delete(`/tasks/trash/${id}`);
+};
